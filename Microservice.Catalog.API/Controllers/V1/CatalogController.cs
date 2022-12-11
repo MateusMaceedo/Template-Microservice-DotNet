@@ -1,5 +1,4 @@
 ﻿using Microservice.Catalog.API.Contracts;
-using Microservice.Catalog.API.Controllers.Base;
 using Microservice.Catalog.Domain.Entities;
 using Microservice.Catalog.Infra.Repositories;
 using Microsoft.AspNetCore.Http;
@@ -13,7 +12,7 @@ namespace Microservice.Catalog.API.Controllers.V1
 {
     [Route("api/v1/[controller]")]
     [ApiController]
-    public class CatalogController : BaseController, ICatalogContracts
+    public class CatalogController : ControllerBase, ICatalogContracts
     {
         private readonly IProductRepository _repository;
 

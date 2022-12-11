@@ -13,10 +13,10 @@ namespace Microservice.Catalog.Infra.Context
                 ("DatabaseSettings:ConnectionString"));
 
             var database = client.GetDatabase(configuration.GetConnectionString
-                ("DatabaseSetting:Database"));
+                ("DatabaseSettings:Database"));
 
             Products = database.GetCollection<ProductEntity>(configuration.GetConnectionString
-                ("DatabaseSetting:CollectionName"));
+                ("DatabaseSettings:CollectionName"));
 
             CatalogContextSeed.SeedData(Products);
         }

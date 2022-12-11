@@ -25,7 +25,6 @@ namespace Microservice.Catalog.API
             {
                 c.SwaggerDoc("v1", new OpenApiInfo { Title = "Microservice.Catalog.API", Version = "v1" });
             });
-            services.AddApiVersioning(o => o.ReportApiVersions = true);
         }
 
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
