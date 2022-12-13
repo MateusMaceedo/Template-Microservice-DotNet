@@ -1,5 +1,6 @@
 ﻿using Microservice.Catalog.API.Contracts;
 using Microservice.Catalog.Domain.Entities;
+using Microservice.Catalog.Domain.Interfaces.Cache;
 using Microservice.Catalog.Infra.Repositories;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
@@ -15,10 +16,12 @@ namespace Microservice.Catalog.API.Controllers.V1
     public class CatalogController : ControllerBase, ICatalogContracts
     {
         private readonly IProductRepository _repository;
+        private readonly ICache _cache;
 
-        public CatalogController(IProductRepository repository)
+        public CatalogController(IProductRepository repository, ICache cache)
         {
             _repository = repository ?? throw new ArgumentNullException(nameof(repository));
+            _cache = cache;
         }
 
         [HttpGet]
@@ -34,13 +37,23 @@ namespace Microservice.Catalog.API.Controllers.V1
         [ProducesResponseType(typeof(ProductEntity), StatusCodes.Status200OK)]
         public async Task<ActionResult<ProductEntity>> GetProductById(string id)
         {
-            var product = await _repository.GetProduct(id);
-            if (product is null)
+            var productCache = await _cache.GetAsync(id.ToString());
+            ProductEntity productEntity = null;
+
+            if (!(string.IsNullOrWhiteSpace(productCache)))
             {
-                return NotFound();
+                productEntity = await _repository.GetProduct(id);
+                Console.WriteLine("Loadded from cache.");
+
+                return Ok(productEntity);
             }
 
-            return Ok(product);
+            if (productEntity is null)
+                return NotFound();
+
+            await _cache.SetAsync(id.ToString(), productEntity.ToString());
+
+            return Ok(productEntity);
         }
 
         [Route("[action]/{category}", Name = "GetProductByCategory")]
@@ -75,7 +88,6 @@ namespace Microservice.Catalog.API.Controllers.V1
         [HttpPut]
         [ProducesResponseType(typeof(ProductEntity), StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
-        //[ApiConventionMethod(typeof(DefaultApiConventions), nameof(DefaultApiConventions.Put))] 
         public async Task<ActionResult> UpdateProduct([FromBody] ProductEntity product)
         {
             if (product is null)

@@ -1,10 +1,10 @@
+using Microservice.Catalog.Infra.Extensions;
 using Microservice.Catalog.IoC.Injection;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
-using Microsoft.OpenApi.Models;
 
 namespace Microservice.Catalog.API
 {
@@ -21,10 +21,8 @@ namespace Microservice.Catalog.API
         {
             services.AddControllers();
             services.RegisterServices();
-            services.AddSwaggerGen(c =>
-            {
-                c.SwaggerDoc("v1", new OpenApiInfo { Title = "Microservice.Catalog.API", Version = "v1" });
-            });
+            services.RegistrarCache();
+            services.RegistrarSwagger();
         }
 
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
@@ -33,13 +31,12 @@ namespace Microservice.Catalog.API
             {
                 app.UseDeveloperExceptionPage();
                 app.UseSwagger();
-                app.UseSwaggerUI(c => c.SwaggerEndpoint("/swagger/v1/swagger.json", "Microservice.Catalog.API v1"));
+                app.UseSwaggerUI(
+                    c => c.SwaggerEndpoint("/swagger/v1/swagger.json", "Microservice.Catalog.API v1"));
             }
 
             app.UseRouting();
-
             app.UseAuthorization();
-
             app.UseEndpoints(endpoints =>
             {
                 endpoints.MapControllers();
