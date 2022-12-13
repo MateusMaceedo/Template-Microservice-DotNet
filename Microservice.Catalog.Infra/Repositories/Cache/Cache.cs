@@ -3,7 +3,7 @@ using Microsoft.Extensions.Caching.Distributed;
 using System;
 using System.Threading.Tasks;
 
-namespace Microservice.Catalog.Infra.Repositories
+namespace Microservice.Catalog.Infra.Repositories.Cache
 {
     public class Cache : ICache
     {

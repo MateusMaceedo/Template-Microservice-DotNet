@@ -1,5 +1,5 @@
 ﻿using Microservice.Catalog.Domain.Interfaces.Cache;
-using Microservice.Catalog.Infra.Repositories;
+using Microservice.Catalog.Infra.Repositories.Cache;
 using Microsoft.Extensions.DependencyInjection;
 
 namespace Microservice.Catalog.Infra.Extensions

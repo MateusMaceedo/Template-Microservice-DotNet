@@ -9,7 +9,7 @@ using Microservice.Catalog.Domain.Interfaces.Repository;
 namespace Microservice.Catalog.Infra.Repositories.Base
 {
     public class RepositoryBase<TEntity> : IRepositoryBase<TEntity>
-         where TEntity : Entity
+    where TEntity : Entity
     {
         public readonly IMongoCollection<TEntity> EntityMongoCollection;
 
@@ -25,7 +25,7 @@ namespace Microservice.Catalog.Infra.Repositories.Base
         }
 
         public virtual TEntity Buscar(string id) =>
-        EntityMongoCollection.Find(s => s.Id == id).FirstOrDefault();
+            EntityMongoCollection.Find(s => s.Id == id).FirstOrDefault();
 
         public virtual async Task<IEnumerable<TEntity>> Buscar(Expression<Func<TEntity, bool>> query)
         {
@@ -51,9 +51,9 @@ namespace Microservice.Catalog.Infra.Repositories.Base
         }
 
         public virtual void Remover(TEntity entityIn) =>
-        EntityMongoCollection.DeleteOne(entity => entity.Id == entityIn.Id);
+            EntityMongoCollection.DeleteOne(entity => entity.Id == entityIn.Id);
 
         public virtual void Remover(string id) =>
-        EntityMongoCollection.DeleteOne(entity => entity.Id == id);
+            EntityMongoCollection.DeleteOne(entity => entity.Id == id);
     }
 }
